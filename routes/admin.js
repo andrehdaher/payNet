@@ -39,7 +39,7 @@ router.get("/user/confirmed", authMiddleware, async (req, res) => {
     res.status(500).json({ message: "حدث خطأ في الخادم" });
   }
 });
-router.get("/user/allconfirmed", authMiddleware, async (req, res) => {
+router.get("/user/allconfirmed", async (req, res) => {
   try {
 
     const payments = await InternetPayment.find({
@@ -85,12 +85,6 @@ const user = await User.findOne({ email });
     console.error("خطأ أثناء تأكيد الدفعة:", error);
     res.status(500).json({ message: "حدث خطأ أثناء معالجة الطلب" });
   }
-
-
-  
-
-
-
 
 });
 
