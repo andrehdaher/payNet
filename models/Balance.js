@@ -9,11 +9,7 @@ const balanceSchema = new mongoose.Schema({
   amount: Number,
   noticeNumber:Number,
   date:Date,
-  isConfirmed: {
-    type: Boolean,
-    default: false,
-  },
-
+  isConfirmed: { type: Boolean, default: false },
   createdAt: {
     type: Date,
     default: Date.now

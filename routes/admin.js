@@ -57,7 +57,7 @@ router.get("/user/allconfirmed", async (req, res) => {
 // تأكيد العملية وإضافة المبلغ إلى المستخدم
 router.post("/confirm-payment", async (req, res) => {
   try {
-    const { email, amount } = req.body;
+    const { email, amount , id } = req.body;
 
 
     if (!email || !amount) {
@@ -72,12 +72,9 @@ const user = await User.findOne({ email });
 
     user.balance += amount;
     await user.save();
-    await Balance.findOneAndUpdate(
-      {name : email},
-     { isConfirmed: true },
-      { new: true }
-      
-    )
+    const payment = await Balance.findById(id);
+   payment.isConfirmed = true;
+    await payment.save();
     
 
     res.status(200).json({ success: true, message: "تم تحديث رصيد المستخدم" });
