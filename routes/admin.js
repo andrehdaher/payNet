@@ -57,32 +57,36 @@ router.get("/user/allconfirmed", async (req, res) => {
 // تأكيد العملية وإضافة المبلغ إلى المستخدم
 router.post("/confirm-payment", async (req, res) => {
   try {
-    const { email, amount , id } = req.body;
+    const { id, amount } = req.body;
 
-
-    if (!email || !amount) {
+    if (!id || !amount) {
       return res.status(400).json({ message: "البيانات غير مكتملة" });
     }
 
-const user = await User.findOne({ email });
+    // ابحث عن الدفعة المطلوبة
+    const payment = await Balance.findById(id);
+    if (!payment) {
+      return res.status(404).json({ message: "لم يتم العثور على الدفعة" });
+    }
 
+    // ابحث عن المستخدم
+    const user = await User.findOne({ email: payment.name });
     if (!user) {
       return res.status(404).json({ message: "المستخدم غير موجود" });
     }
 
+    // حدّث الرصيد وحالة التأكيد
     user.balance += amount;
     await user.save();
-    const payment = await Balance.findById(id);
-   payment.isConfirmed = true;
+
+    payment.isConfirmed = true;
     await payment.save();
-    
 
     res.status(200).json({ success: true, message: "تم تحديث رصيد المستخدم" });
   } catch (error) {
     console.error("خطأ أثناء تأكيد الدفعة:", error);
     res.status(500).json({ message: "حدث خطأ أثناء معالجة الطلب" });
   }
-
 });
 
 
