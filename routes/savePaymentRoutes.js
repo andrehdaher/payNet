@@ -28,11 +28,17 @@ router.post("/internet", authMiddleware, async (req, res) => {
       speed,
       amount,
       email, 
+      status: "جاري التسديد", // تأكد من أن الموديل يسمح بذلك أو اعتمد الحالة الافتراضية
+
 
 
     });
 
     await payment.save();
+      // إرسال التحديث عبر Socket.IO عند وجود دفعات قيد التسديد
+    const io = req.app.get("io");
+    const pendingPayments = await Payment.find({ status: "جاري التسديد" });
+    io.emit("pendingPaymentsUpdate", pendingPayments);
 
     res.status(200).json({ message: "تمت العملية بنجاح", newBalance: user.balance });
   } catch (error) {

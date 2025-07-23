@@ -5,8 +5,32 @@ require('dotenv').config();
 const savePaymentRoutes = require("./routes/savePaymentRoutes");
 const saveBalanceRoutes = require("./routes/saveBalance");
 const adminRoutes = require("./routes/admin");
+const http = require('http'); // جديد
+const { Server } = require('socket.io'); // جديد
+
 
 const app = express();
+
+const server = http.createServer(app); // جديد
+const io = new Server(server, {
+  cors: {
+    origin: "*", // يمكن تخصيصه حسب الدومين
+    methods: ["GET", "POST"],
+  },
+});
+
+// تخزين سوكيت للعملاء
+io.on("connection", (socket) => {
+  console.log("✅ عميل جديد متصل عبر سوكيت");
+
+  socket.on("disconnect", () => {
+    console.log("❌ تم فصل الاتصال بالعميل");
+  });
+});
+
+// إتاحة الـ io للوصول من أي مكان
+app.set("io", io); // مهم جداً
+
 
 // Middlewares
 app.use(cors());
@@ -46,7 +70,7 @@ const startServer = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
     console.log('MongoDB connected');
-    app.listen(process.env.PORT, () => {
+    server.listen(process.env.PORT, () => {
       console.log(`Server running on http://localhost:${process.env.PORT}`);
     });
   } catch (err) {
