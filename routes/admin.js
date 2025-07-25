@@ -8,7 +8,7 @@ const Balance = require("../models/Balance");
 
 
 router.get("/pending", async (req, res) => {
-  const payments = await InternetPayment.find({ status: "جاري التسديد" });
+  const payments = await InternetPayment.find({ status:"بدء التسديد" ||"جاري التسديد" });
     // إرسال التحديث عبر Socket.IO لكل العملاء
   const io = req.app.get("io");
   io.emit("pendingPaymentsUpdate", payments); // الاسم يمكن تغييره حسب الحاجة
@@ -21,6 +21,17 @@ router.patch("/confirm/:id", async (req, res) => {
   const updated = await InternetPayment.findByIdAndUpdate(
     id,
     { status: "تم التسديد" },
+    { new: true }
+  );
+  res.json(updated);
+});
+
+router.patch("/start/:id", async (req, res) => {
+  const { id } = req.params;
+  console.log({id})
+  const updated = await InternetPayment.findByIdAndUpdate(
+    id,
+    { status: "بدء التسديد" },
     { new: true }
   );
   res.json(updated);

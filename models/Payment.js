@@ -9,7 +9,7 @@ const paymentSchema = new mongoose.Schema({
   amount: Number,
   status: {
     type: String,
-    enum: ["جاري التسديد", "تم التسديد", "غير مسددة"], // ← أضف "غير مسددة"
+    enum: ["جاري التسديد", "تم التسديد", "غير مسددة","بدء التسديد"], // ← أضف "غير مسددة"
     default: "جاري التسديد"
   },
   
