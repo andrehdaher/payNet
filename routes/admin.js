@@ -142,7 +142,8 @@ router.post("/reject/:id", async (req, res) => {
     // 2. إرجاع الرصيد للمستخدم
     const user = await User.findOne({ email });
     if (user) {
-      user.balance += amount;
+      const Amount = amount + (amount*0.05)
+      user.balance += Amount;
       await user.save();
     }
 
