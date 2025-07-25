@@ -8,8 +8,11 @@ const Balance = require("../models/Balance");
 
 
 router.get("/pending", async (req, res) => {
-  const payments = await InternetPayment.find({ status:"جاري التسديد" });
-    // إرسال التحديث عبر Socket.IO لكل العملاء
+  const payments = await InternetPayment.find({ 
+    status: { $in: ["جاري التسديد", "بدء التسديد"] } 
+  });
+
+  // إرسال التحديث عبر Socket.IO لكل العملاء
   const io = req.app.get("io");
   io.emit("pendingPaymentsUpdate", payments); // الاسم يمكن تغييره حسب الحاجة
 
