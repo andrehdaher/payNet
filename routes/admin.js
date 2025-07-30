@@ -157,6 +157,50 @@ router.post("/reject/:id", async (req, res) => {
   }
 });
 
+//جلب جميع المستخدمين
+router.get('/all-user', async(req,res)=>{
+  const allUser =await User.find();
+  try{
+    res.status(201).json(allUser)
+
+  }catch(err){
+    res.status(401).json(err)
+  }
+})
+
+router.delete('/deleteuser/:id' , async(req, res)=>{
+  const id = req.params.id
+  try{
+  await  User.findByIdAndDelete({_id : id})
+  res.status(201).json("تم حذف المستخدم")
+  }catch(err){
+    res.status(401).json(err)
+
+  }
+})
+
+router.put('/addbatch/:id' , async(req, res)=>{
+  const id = req.params.id
+  const batch = req.body.amount
+   
+  
+  try{
+    const newUser = await User.findById({_id:id})
+    const addbatch = batch + newUser.balance
+    await User.findByIdAndUpdate(
+      {_id : id},
+      {balance : addbatch},
+      {new : true}
+    )
+    
+  
+    res.status(201).json("تم اضافة الدفعة بنجاح")
+  }catch(err){
+    res.status(401).json(err)
+
+  }
+})
+
 
 
 

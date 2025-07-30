@@ -53,7 +53,6 @@ app.use("/api/user", require("./routes/userRoutes"));
 app.use("/api/payment", require("./routes/paymentRoutes"));
 
 // حفظ عملية التسديد في قاعدة البيانات
-app.use("/api/savepayment", savePaymentRoutes);
 
 
 app.use("/api/saveBalance", saveBalanceRoutes);
