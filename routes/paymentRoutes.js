@@ -51,12 +51,12 @@ router.post("/internet-full", authMiddleware, async (req, res) => {
     });
     await payment.save();
 
-    // إشعار بالتحديث عبر Socket.IO
     const io = req.app.get("io");
-    if (io) {
-      const pendingPayments = await Payment.find({ status: "جاري التسديد" });
-      io.emit("pendingPaymentsUpdate", pendingPayments);
-    }
+if (io) {
+  const pendingPayments = await Payment.find({ status: { $in: ["جاري التسديد", "بدء التسديد"] } });
+  io.emit("pendingPaymentsUpdate", pendingPayments);
+}
+
 
     res.status(200).json({
       message: "تمت العملية بنجاح",

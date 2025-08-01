@@ -179,25 +179,52 @@ router.delete('/deleteuser/:id' , async(req, res)=>{
   }
 })
 
-router.put('/addbatch/:id' , async(req, res)=>{
+router.put('/addbatch/:id'  , async(req, res)=>{
   const id = req.params.id
   const batch = req.body.amount
    
   
   try{
     const newUser = await User.findById({_id:id})
-    const addbatch = batch + newUser.balance
+    const balanceAmount = newUser.balance + batch;
+    const newBalance =await new Balance({
+      name : newUser.email,
+      amount : batch,
+      isConfirmed: true,
+      destination : "nader daher",
+      operator : "nader daher",
+      noticeNumber: 1,
+      number : "0966248984",
+      user : newUser._id,
+
+    })
+
+    await newBalance.save();
     await User.findByIdAndUpdate(
-      {_id : id},
-      {balance : addbatch},
+      {_id:id},
+      {balance :balanceAmount},
       {new : true}
+    
     )
     
-  
-    res.status(201).json("تم اضافة الدفعة بنجاح")
-  }catch(err){
+res.status(201).json("تم اضافة الدفعة بنجاح")
+  }
+
+  catch(err){
     res.status(401).json(err)
 
+  }
+})
+
+//حذف دفعة 
+router.delete('/delete/:id' , async(req,res)=>{
+  const id = req.params.id
+  try{
+  await Balance.findByIdAndDelete({_id : id})
+  res.status(201).json("delete done")
+  }catch(err){
+    console.log(err)
+    res.status(401).json("error")
   }
 })
 
