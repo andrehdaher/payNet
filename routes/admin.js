@@ -229,6 +229,32 @@ router.delete('/delete/:id' , async(req,res)=>{
 })
 
 
+router.get("/user/:id" , async(req,res)=>{
+  const id = req.params.id
+  try{
+  const updateUser= await User.findById(id)
+  res.status(200).json(updateUser)
+  }catch(err){
+    res.status(401).json(err)
+
+  }
+})
+router.put("/updateuser/:id" , async(req,res)=>{
+  const id = req.params.id
+  try{
+  const updateUser= await User.findByIdAndUpdate(
+    id,
+    req.body,
+    {new :true}
+  )
+  res.status(200).json(updateUser)
+  }catch(err){
+    res.status(401).json(err)
+
+  }
+})
+
+
 
 
 module.exports = router; // هذا السطر مهم جداً
