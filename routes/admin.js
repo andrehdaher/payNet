@@ -259,6 +259,8 @@ let fatoraDataMap = {}; // مفتاح = البريد الإلكتروني، ال
 
 // POST - حفظ البيانات (استعلام)
 router.post("/astalam", (req, res) => {
+  let fatoraDataMap = {}; // مفتاح = البريد الإلكتروني، القيمة = بيانات الفاتورة
+
   const data = req.body;
     const {email}  = req.body;
 
@@ -278,6 +280,8 @@ router.post("/astalam", (req, res) => {
 // GET - جلب البيانات
 router.get("/astalam", (req, res) => {
   const {email}  = req.query ;
+  let fatoraDataMap = {}; // مفتاح = البريد الإلكتروني، القيمة = بيانات الفاتورة
+
 
   if (!fatoraDataMap[email]) {
     return res.status(404).json({ message: "لا توجد بيانات" });
