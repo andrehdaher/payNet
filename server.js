@@ -35,6 +35,13 @@ app.set("io", io); // مهم جداً
 app.use(cors());
 app.use(express.json());
 
+// تمرير io لكل request
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
+
+
 // Routes
 app.get('/', (req, res) => {
   res.send('API is running...');

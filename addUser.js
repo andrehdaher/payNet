@@ -14,10 +14,10 @@ mongoose.connect(process.env.MONGO_URI, {
 .then(async () => {
   console.log("🟢 تم الاتصال بقاعدة البيانات");
 
-  const email = "suliman31"; // يمكنك تغييره
-  const plainPassword = "Ss123123"; // كلمة المرور (غير مشفرة)
-  const name ="سليمان غنوم"
-  const number = "0944555912"
+  const email = "hassan"; // يمكنك تغييره
+  const plainPassword = "Hh123123"; // كلمة المرور (غير مشفرة)
+  const name ="حسن بدر الدين بدر"
+  const number = "0933071564"
 
   // تحقق إذا كان المستخدم موجود مسبقاً
   const existingUser = await User.findOne({ email });

@@ -255,6 +255,37 @@ router.put("/updateuser/:id" , async(req,res)=>{
 })
 
 
+let fatoraDataMap = {}; // مفتاح = البريد الإلكتروني، القيمة = بيانات الفاتورة
+
+// POST - حفظ البيانات (استعلام)
+router.post("/astalam", (req, res) => {
+  const data = req.body;
+    const {email}  = req.body;
+
+
+  // if (!selectedCompany || !landline) {
+  //   return res.status(400).json({ error: "يرجى إدخال الشركة والرقم الأرضي" });
+  // }
+
+  fatoraDataMap[email] = data;
+
+  // إرسال البيانات لكل العملاء المتصلين عبر socket.io
+  req.io.to(email).emit("fatoraUpdated", fatoraDataMap[email]);
+
+  res.status(201).json({ message: "تم الاستعلام وحفظ البيانات" });
+});
+
+// GET - جلب البيانات
+router.get("/astalam", (req, res) => {
+  const {email}  = req.query ;
+
+  if (!fatoraDataMap[email]) {
+    return res.status(404).json({ message: "لا توجد بيانات" });
+  }
+
+  res.status(200).json(fatoraDataMap[email]);
+});
+
 
 
 module.exports = router; // هذا السطر مهم جداً
