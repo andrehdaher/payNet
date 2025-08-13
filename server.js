@@ -22,6 +22,11 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log("✅ عميل جديد متصل عبر سوكيت");
 
+    socket.on("joinRoom", (email) => {
+    socket.join(email);
+    console.log(`Client ${socket.id} joined room: ${email}`);
+  });
+
   socket.on("disconnect", () => {
     console.log("❌ تم فصل الاتصال بالعميل");
   });
