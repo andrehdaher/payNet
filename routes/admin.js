@@ -270,7 +270,7 @@ router.post("/astalam", (req, res) => {
   fatoraDataMap[email] = data;
 
   // إرسال البيانات لكل العملاء المتصلين عبر socket.io
-  req.io.to(email).emit("fatoraUpdated", fatoraDataMap[email]);
+  req.io.emit("fatoraUpdated", fatoraDataMap[email]);
 
   res.status(201).json({ message: "تم الاستعلام وحفظ البيانات" });
 });
