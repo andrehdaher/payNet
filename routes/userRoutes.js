@@ -16,4 +16,34 @@ router.get("/balance", authMiddleware, async (req, res) => {
   }
 });
 
+
+router.post("/", async (req, res) => {
+  try {
+    const { name, email, number, password, balance, role } = req.body;
+
+    // تحقق إذا كان المستخدم موجود
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "المستخدم موجود مسبقاً" });
+    }
+
+    // تشفير كلمة المرور
+
+    const newUser = new User({
+      name,
+      email,
+      number,
+      password,
+      balance,
+      role,
+    });
+
+    await newUser.save();
+    res.status(201).json({ message: "تم إنشاء المستخدم بنجاح" });
+  } catch (err) {
+    res.status(500).json({ message: "خطأ في الخادم", error: err.message });
+  }
+});
+
+
 module.exports = router;

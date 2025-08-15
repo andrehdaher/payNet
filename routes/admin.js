@@ -179,6 +179,7 @@ router.delete('/deleteuser/:id' , async(req, res)=>{
   }
 })
 
+
 router.put('/addbatch/:id'  , async(req, res)=>{
   const id = req.params.id
   const batch = req.body.amount
@@ -195,6 +196,8 @@ router.put('/addbatch/:id'  , async(req, res)=>{
       operator : "nader daher",
       noticeNumber: 1,
       number : "0966248984",
+      status: false,
+      date:Date.now(),
       user : newUser._id,
 
     })
@@ -206,7 +209,6 @@ router.put('/addbatch/:id'  , async(req, res)=>{
       {new : true}
     
     )
-    
 res.status(201).json("تم اضافة الدفعة بنجاح")
   }
 
@@ -289,6 +291,48 @@ router.get("/astalam", (req, res) => {
 
   res.status(200).json(fatoraDataMap[email]);
 });
+
+
+router.get('/daen',async(req,res)=>{
+  try{
+  const daenBalance = await Balance.find({status:false})
+  res.status(201).json(daenBalance)
+  }catch(err){
+    res.status(401).json(err)
+
+  }
+  
+})
+
+
+
+
+router.post('/confirm-daen', async  (req,res)=>{
+  const {id} = req.body
+  try{
+      // ابحث عن الدفعة المطلوبة
+    const payment = await Balance.findById(id);
+    if (!payment) {
+      return res.status(404).json({ message: "لم يتم العثور على الدفعة" });
+    }
+
+    // ابحث عن المستخدم
+    const user = await User.findOne({ email: payment.name });
+    if (!user) {
+      return res.status(404).json({ message: "المستخدم غير موجود" });
+    }
+
+     payment.status = true;
+    await payment.save();
+
+    res.status(200).json({ success: true, message: "تم تحديث رصيد المستخدم" });
+  } catch (error) {
+    console.error("خطأ أثناء تأكيد الدفعة:", error);
+    res.status(500).json({ message: "حدث خطأ أثناء معالجة الطلب" });
+  }
+
+
+})
 
 
 
