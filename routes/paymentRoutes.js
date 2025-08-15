@@ -7,7 +7,7 @@ const authMiddleware = require("../middleware/authMiddleware");
 
 router.post("/internet-full", authMiddleware, async (req, res) => {
   try {
-    const { landline, company, speed, amount, email } = req.body;
+    const { landline, company, speed, amount, email , paymentType } = req.body;
     const userId = req.user.id;
 
     if (!landline || !company || !speed || !amount) {
@@ -31,6 +31,7 @@ router.post("/internet-full", authMiddleware, async (req, res) => {
       company,
       speed,
       amount,
+      email,
       createdAt: { $gt: new Date(Date.now() - 60 * 1000) }
     });
 
@@ -46,6 +47,7 @@ router.post("/internet-full", authMiddleware, async (req, res) => {
       company,
       speed,
       amount,
+      paymentType,
       email,
       status: "جاري التسديد",
     });

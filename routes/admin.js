@@ -57,6 +57,38 @@ router.get("/user/confirmed", authMiddleware, async (req, res) => {
     res.status(500).json({ message: "حدث خطأ في الخادم" });
   }
 });
+
+
+// تعديل نوع الدفع
+router.put("/payment/:id", async (req, res) => {
+  try {
+    const { id } = req.params; // ID العملية
+    const { paymentType } = req.body; // نوع الدفع الجديد
+
+    // التحقق من صحة القيمة
+    if (!["cash", "credit"].includes(paymentType)) {
+      return res.status(400).json({ message: "نوع الدفع غير صالح" });
+    }
+
+    // تحديث العملية
+    const updatedPayment = await InternetPayment.findByIdAndUpdate(
+      id,
+      { paymentType },
+      { new: true }
+    );
+
+    if (!updatedPayment) {
+      return res.status(404).json({ message: "العملية غير موجودة" });
+    }
+
+    res.json({ message: "تم تحديث نوع الدفع بنجاح", payment: updatedPayment });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "حدث خطأ في السيرفر" });
+  }
+});
+
+
 router.get("/user/allconfirmed", async (req, res) => {
   try {
 
