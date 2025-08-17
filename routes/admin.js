@@ -181,6 +181,8 @@ router.post("/reject/:id", async (req, res) => {
       user.balance += Amount;
       await user.save();
     }
+    req.io.emit("json_message" , true)
+      
 
     res.status(200).json({ message: "تم الرفض وإرجاع الرصيد" });
   } catch (err) {
